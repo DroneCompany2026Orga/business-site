@@ -51,7 +51,7 @@ docker compose down
 
 The Pages build exports the site as static files. The simulation and navigation work in the browser. The contact form offers a downloadable inquiry; GitHub Pages cannot run the contact delivery API or keep its webhook token secret.
 
-The repository includes a workflow at the root `.github/workflows/pages.yml`. In the GitHub repository, choose **Settings → Pages → Build and deployment → Source: GitHub Actions**. Once the workflow is on `main`, pushes that change `landing_page/` build and deploy the site at `https://<owner>.github.io/<repository>/`. You can also run the workflow manually. For a custom domain, set the repository Actions variable `SITE_URL` to its full HTTPS origin; the build uses its path as the Next.js base path.
+The repository includes a workflow at the root `.github/workflows/pages.yml`. In the GitHub repository, choose **Settings → Pages → Build and deployment → Source: GitHub Actions**. Push this branch, `1-host-on-github-page`, to build and deploy the site at `https://<owner>.github.io/<repository>/`; merging into `main` is not required. If the `github-pages` environment only allows deployments from `main`, add `1-host-on-github-page` under **Settings → Environments → github-pages → Deployment branches and tags**. For a custom domain, set the repository Actions variable `SITE_URL` to its full HTTPS origin; the build uses its path as the Next.js base path.
 
 To build the same files locally on Linux with Node.js 24:
 
