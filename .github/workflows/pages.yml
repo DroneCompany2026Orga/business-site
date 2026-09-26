@@ -15,9 +15,10 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/1-host-on-github-page'
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
+      name: github-pages-branch
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
