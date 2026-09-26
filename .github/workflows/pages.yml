@@ -3,9 +3,6 @@ name: Publish landing page
 on:
   push:
     branches: [1-host-on-github-page]
-    paths:
-      - "landing_page/**"
-      - ".github/workflows/pages.yml"
 
 permissions:
   contents: read
