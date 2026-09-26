@@ -11,6 +11,9 @@ import { ContactProvider } from "@/components/ContactProvider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
+// Read contact delivery configuration at runtime, including on /developers.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: site.title, template: `%s — ${brand.name}` },

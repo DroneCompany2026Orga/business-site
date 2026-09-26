@@ -27,6 +27,26 @@ Deploy the directory to a Node.js-compatible Next.js host. This application uses
 
 Set `NEXT_PUBLIC_SITE_URL` to the real canonical origin before building (for example, `https://your-domain.com`). This configures social metadata, sitemap URLs, and the contact origin check. Rebuild after changing branding or public environment values.
 
+### Docker Compose
+
+From the repository root:
+
+```bash
+cd landing_page
+cp .env.example .env
+# Edit .env for your public origin and optional contact webhook.
+docker compose up --build -d
+```
+
+Open http://localhost:3000. Docker Compose reads `.env` automatically; `.env.local` is used by local Next.js commands and is excluded from the image. The container runs the production standalone server as a non-root user and includes an HTTP health check.
+
+To change the host port, add `PORT=8080` to `.env` and update `NEXT_PUBLIC_SITE_URL` to the matching browser origin (for example, `http://localhost:8080`). For deployment, use your public HTTPS origin. The site URL is set at build time; rebuild with `docker compose up --build -d` after changing it. Webhook settings are supplied only at runtime; apply changes with `docker compose up -d`. Pages render at request time so the contact form reflects the runtime configuration.
+
+```bash
+docker compose logs -f landing_page
+docker compose down
+```
+
 ### Contact delivery
 
 The form works in two explicit modes:
@@ -36,7 +56,7 @@ The form works in two explicit modes:
 
 The payload contains `name`, `email`, `organization`, `message`, `intent` (`demo` or `partnership`), and `submittedAt`. Secrets stay on the server. The endpoint rejects cross-origin and oversized requests, validates input, includes a honeypot, limits delivery time, and does not log inquiry contents. It also has a bounded per-process request counter. For a public multi-instance deployment, configure shared rate limiting at your hosting edge. Ensure the inquiry use statement matches your organization's data policy.
 
-Restart/rebuild the application after enabling contact delivery so the rendered form and endpoint use the same configuration. Test successful and failed delivery against your real receiver before launch.
+Restart the application after enabling contact delivery so the rendered form and endpoint use the same configuration. With Docker Compose, use `docker compose up -d` to apply environment changes. Test successful and failed delivery against your real receiver before launch.
 
 ## Branding and content
 
