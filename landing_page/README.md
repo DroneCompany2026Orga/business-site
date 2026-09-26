@@ -23,7 +23,7 @@ npm run build
 npm start
 ```
 
-Deploy the directory to a Node.js-compatible Next.js host. This application uses a server route for contact delivery and is not a static-export application. No external font, image, map, or analytics service is needed.
+Deploy the directory to a Node.js-compatible Next.js host when you need the server-side contact form. No external font, image, map, or analytics service is needed.
 
 Set `NEXT_PUBLIC_SITE_URL` to the real canonical origin before building (for example, `https://your-domain.com`). This configures social metadata, sitemap URLs, and the contact origin check. Rebuild after changing branding or public environment values.
 
@@ -46,6 +46,22 @@ To change the host port, add `PORT=8080` to `.env` and update `NEXT_PUBLIC_SITE_
 docker compose logs -f landing_page
 docker compose down
 ```
+
+### GitHub Pages
+
+The Pages build exports the site as static files. The simulation and navigation work in the browser. The contact form offers a downloadable inquiry; GitHub Pages cannot run the contact delivery API or keep its webhook token secret.
+
+The repository includes a workflow at the root `.github/workflows/pages.yml`. In the GitHub repository, choose **Settings → Pages → Build and deployment → Source: GitHub Actions**. Once the workflow is on `main`, pushes that change `landing_page/` build and deploy the site at `https://<owner>.github.io/<repository>/`. You can also run the workflow manually. For a custom domain, set the repository Actions variable `SITE_URL` to its full HTTPS origin; the build uses its path as the Next.js base path.
+
+To build the same files locally on Linux with Node.js 24:
+
+```bash
+cd landing_page
+npm ci
+NEXT_PUBLIC_SITE_URL=https://<owner>.github.io/<repository> npm run build:pages
+```
+
+The output is in `landing_page/out/` and includes `.nojekyll`. The Pages build copies the app into a temporary directory so the Node.js contact route and runtime layout setting remain available to the Docker build. The temporary copy is deleted after building.
 
 ### Contact delivery
 

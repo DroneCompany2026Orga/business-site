@@ -1,0 +1,54 @@
+name: Publish landing page
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "landing_page/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: landing_page/package-lock.json
+      - name: Install dependencies
+        working-directory: landing_page
+        run: npm ci
+      - name: Set site URL
+        env:
+          CUSTOM_SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          if [ -n "$CUSTOM_SITE_URL" ]; then
+            site_url="$CUSTOM_SITE_URL"
+          else
+            site_url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}"
+          fi
+          echo "NEXT_PUBLIC_SITE_URL=${site_url%/}" >> "$GITHUB_ENV"
+      - name: Build static site
+        working-directory: landing_page
+        run: npm run build:pages
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: landing_page/out
+      - id: deployment
+        uses: actions/deploy-pages@v4

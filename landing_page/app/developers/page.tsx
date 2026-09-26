@@ -3,10 +3,11 @@ import type { Metadata } from "next";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { brand } from "@/config/brand";
 import { ContactButton } from "@/components/ContactProvider";
+import { site } from "@/config/site";
 export const metadata: Metadata = {
   title: "Integration concept",
   description: `Explore the proposed vehicle integration architecture for ${brand.name}. Concept documentation, not a released SDK.`,
-  alternates: { canonical: "/developers" },
+  alternates: { canonical: `${site.url}/developers` },
 };
 export default function Developers() {
   return (

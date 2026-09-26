@@ -18,6 +18,7 @@ import { DroneSymbol, GroundSymbol } from "./SwarmNetwork";
 import {
   getSnapshot,
   formatTime,
+  isScenario,
   scenarios,
   type ScenarioId,
 } from "@/lib/simulation";
@@ -29,12 +30,19 @@ const subscribeMotion = (callback: () => void) => {
   media.addEventListener("change", callback);
   return () => media.removeEventListener("change", callback);
 };
-export function SwarmSimulation({
-  initialScenario = "wildfire",
-}: {
-  initialScenario?: ScenarioId;
-}) {
-  const [scenario, setScenario] = useState<ScenarioId>(initialScenario);
+const subscribeLocation = () => () => {};
+const getScenarioFromUrl = (): ScenarioId => {
+  const requested = new URLSearchParams(window.location.search).get("scenario");
+  return isScenario(requested) ? requested : "wildfire";
+};
+export function SwarmSimulation() {
+  const requestedScenario = useSyncExternalStore<ScenarioId>(
+    subscribeLocation,
+    getScenarioFromUrl,
+    () => "wildfire",
+  );
+  const [manualScenario, setManualScenario] = useState<ScenarioId | null>(null);
+  const scenario = manualScenario ?? requestedScenario;
   const [tick, setTick] = useState(0);
   const [running, setRunning] = useState(true);
   const [explicitPlay, setExplicitPlay] = useState(false);
@@ -86,7 +94,7 @@ export function SwarmSimulation({
     };
   }, [expanded, ref]);
   function changeScenario(value: ScenarioId) {
-    setScenario(value);
+    setManualScenario(value);
     setTick(0);
     setSelected(null);
   }

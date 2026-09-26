@@ -9,16 +9,11 @@ import { DeveloperIntegration } from "@/components/DeveloperIntegration";
 import { FutureHardware } from "@/components/FutureHardware";
 import { Vision } from "@/components/Vision";
 import { CTA } from "@/components/CTA";
-import { isScenario } from "@/lib/simulation";
 import type { Metadata } from "next";
+import { site } from "@/config/site";
 
-export const metadata: Metadata = { alternates: { canonical: "/" } };
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ scenario?: string }>;
-}) {
-  const { scenario } = await searchParams;
+export const metadata: Metadata = { alternates: { canonical: site.url } };
+export default function Home() {
   return (
     <main id="main">
       <Hero />
@@ -27,13 +22,7 @@ export default async function Home({
       <CrossDomain />
       <Applications />
       <AINative />
-      <SwarmSimulation
-        initialScenario={
-          isScenario(scenario ?? null)
-            ? (scenario as "wildfire" | "infrastructure" | "search")
-            : "wildfire"
-        }
-      />
+      <SwarmSimulation />
       <Architecture />
       <DeveloperIntegration />
       <FutureHardware />

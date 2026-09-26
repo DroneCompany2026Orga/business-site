@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 export function Eyebrow({
@@ -45,10 +46,22 @@ export function TextLink({
   href: string;
   children: ReactNode;
 }) {
-  return (
-    <a className="text-link" href={href}>
+  const link = (
+    <>
       {children}
       <ArrowUpRight size={16} aria-hidden="true" />
+    </>
+  );
+  if (href.startsWith("/")) {
+    return (
+      <Link className="text-link" href={href}>
+        {link}
+      </Link>
+    );
+  }
+  return (
+    <a className="text-link" href={href}>
+      {link}
     </a>
   );
 }

@@ -6,7 +6,7 @@ import "@fontsource/geist/600.css";
 import "@fontsource/geist-mono/400.css";
 import "./globals.css";
 import { brand } from "@/config/brand";
-import { site } from "@/config/site";
+import { basePath, site } from "@/config/site";
 import { ContactProvider } from "@/components/ContactProvider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -15,11 +15,11 @@ import { Footer } from "@/components/Footer";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(new URL(site.url).origin),
   title: { default: site.title, template: `%s — ${brand.name}` },
   description: site.description,
   applicationName: brand.name,
-  icons: { icon: "/icon.svg" },
+  icons: { icon: `${basePath}/icon.svg` },
   keywords: [
     "swarm robotics",
     "distributed autonomy",
@@ -30,16 +30,19 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "/",
+    url: site.url,
     siteName: brand.name,
     title: site.title,
     description: site.description,
+    images: [
+      { url: `${site.url}/opengraph-image.png`, width: 1200, height: 630 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: site.title,
     description: site.description,
-    images: ["/opengraph-image"],
+    images: [`${site.url}/opengraph-image.png`],
   },
 };
 export const viewport: Viewport = {

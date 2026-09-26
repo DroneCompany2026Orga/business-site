@@ -51,6 +51,12 @@ test("simulation controls, scenarios, and node inspection work", async ({
   await page.getByLabel("Simulation scenario").selectOption("search");
   await expect(page.getByText("SEARCH GRID / AREA COVERAGE")).toBeVisible();
 });
+test("scenario links select the matching simulation", async ({ page }) => {
+  await page.goto("/?scenario=infrastructure#simulation");
+  await expect(page.getByLabel("Simulation scenario")).toHaveValue(
+    "infrastructure",
+  );
+});
 test("resilience control updates the topology", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Disconnect a node" }).click();
